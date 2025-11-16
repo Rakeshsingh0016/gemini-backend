@@ -37,14 +37,16 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
+    console.log("GEMINI RAW RESPONSE:", data);
+
     const reply =
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "No reply from Gemini";
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Gemini did not return any text.";
 
     res.status(200).json({ reply });
 
   } catch (err) {
-    console.error(err);
+    console.error("SERVER ERROR:", err);
     res.status(500).json({ error: "Server error" });
   }
 }
