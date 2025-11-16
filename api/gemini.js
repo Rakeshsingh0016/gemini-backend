@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+export default async function handler(req, res) { 
 
   // ------------ CORS FIX ------------
   res.setHeader("Access-Control-Allow-Origin", "*"); 
@@ -39,11 +39,14 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!data.candidates || !data.candidates[0]) {
-      return res.status(500).json({ error: "Invalid response from Gemini API" });
+      return res.status(500).json({ error: "Invalid response from Gemini API", raw: data });
     }
 
+    // ✅ Correct Gemini reply extraction
+    const replyText = data.candidates[0].content.parts[0].text;
+
     res.status(200).json({
-      reply: data.candidates[0].output
+      reply: replyText
     });
 
   } catch (error) {
