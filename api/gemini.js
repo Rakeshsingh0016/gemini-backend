@@ -31,8 +31,15 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-      return res.status(500).json({ error: "Invalid response from Gemini API", raw: data });
+    if (!data.candidates ||
+        !data.candidates[0] ||
+        !data.candidates[0].content ||
+        !data.candidates[0].content.parts ||
+        !data.candidates[0].content.parts[0]) {
+      return res.status(500).json({
+        error: "Invalid response from Gemini API",
+        raw: data
+      });
     }
 
     const replyText = data.candidates[0].content.parts[0].text;
