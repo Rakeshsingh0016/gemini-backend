@@ -11,22 +11,21 @@ export default async function handler(req, res) {
 
   try {
     const { prompt } = req.body;
-    if (!prompt) {
-      return res.status(400).json({ error: "Prompt is required" });
-    }
+    if (!prompt) return res.status(400).json({ error: "Prompt is required" });
 
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.status(500).json({ error: "API key missing in ENV" });
-    }
+    if (!apiKey) return res.status(500).json({ error: "API key missing in ENV" });
 
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`,
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-goog-api-key": apiKey
+        },
         body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: prompt }] }]
+          contents: [{ parts: [{ text: prompt }] }]
         })
       }
     );
